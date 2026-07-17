@@ -7,6 +7,8 @@ from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 
+
+
 def main():
     print(f"Starting Asteroids with pygame version: {pygame.version.ver}")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -40,16 +42,28 @@ def main():
         updatable.update(dt)
         for object in drawable:
             object.draw(screen)
-        for asteroid in asteroids:
-            if asteroid.collides_with(player):
-                log_event("player_hit")
-                print("Game Over!")
-                sys.exit()
 
-
+        asteroids_collision_check(asteroids, shots, player)
         pygame.display.flip()
-
         dt = clock.tick(60) / 1000
+
+def asteroids_collision_check(asteroids, shots, player) -> None:
+    def player_hit():
+        log_event("player_hit")
+        print("Game Over!")
+        sys.exit()
+
+    def destroy_asteroid_and_shot(asteroid, shot):
+        log_event("asteroid_shot")
+        asteroid.kill()
+        shot.kill()
+
+    for asteroid in asteroids:
+        if asteroid.collides_with(player):
+            player_hit()
+        for shot in shots:
+            if asteroid.collides_with(shot):
+                destroy_asteroid_and_shot(asteroid, shot)
 
 if __name__ == "__main__":
     main()
