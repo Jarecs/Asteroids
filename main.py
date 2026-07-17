@@ -58,12 +58,17 @@ def asteroids_collision_check(asteroids, shots, player) -> None:
         asteroid.kill()
         shot.kill()
 
+    def split_asteroid(asteroid, shot):
+        log_event("asteroid_split")
+        asteroid.split()
+        shot.kill()
+
     for asteroid in asteroids:
         if asteroid.collides_with(player):
             player_hit()
         for shot in shots:
             if asteroid.collides_with(shot):
-                destroy_asteroid_and_shot(asteroid, shot)
+                split_asteroid(asteroid, shot)
 
 if __name__ == "__main__":
     main()
